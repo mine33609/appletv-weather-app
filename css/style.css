@@ -1,0 +1,595 @@
+/* ===========================
+   Apple TV Optimized Styles
+   - 大画面（1920x1080以上）最適化
+   - 3メートル離れた距離で視認可能
+   - リモコン操作対応
+   - 16:9 比率最適化
+   =========================== */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+:root {
+    /* Apple TV Color Palette */
+    --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    --secondary-gradient: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+    --dark-bg: #0a0e27;
+    --card-bg: rgba(255, 255, 255, 0.05);
+    --glass-bg: rgba(255, 255, 255, 0.08);
+    --focus-color: #00d4ff;
+    --focus-glow: 0 0 0 6px rgba(0, 212, 255, 0.4), 0 0 30px rgba(0, 212, 255, 0.6);
+    --text-primary: #ffffff;
+    --text-secondary: rgba(255, 255, 255, 0.8);
+    --text-tertiary: rgba(255, 255, 255, 0.6);
+    
+    /* Apple TV Safe Area */
+    --safe-area-top: 60px;
+    --safe-area-bottom: 60px;
+    --safe-area-left: 90px;
+    --safe-area-right: 90px;
+    
+    /* Typography - Extra Large for TV */
+    --font-size-massive: 12rem;
+    --font-size-huge: 4.5rem;
+    --font-size-xlarge: 3rem;
+    --font-size-large: 2.2rem;
+    --font-size-medium: 1.8rem;
+    --font-size-base: 1.5rem;
+}
+
+body {
+    font-family: 'Noto Sans JP', sans-serif;
+    background: var(--dark-bg);
+    background-image: 
+        radial-gradient(ellipse at top, rgba(102, 126, 234, 0.15) 0%, transparent 60%),
+        radial-gradient(ellipse at bottom, rgba(118, 75, 162, 0.15) 0%, transparent 60%);
+    color: var(--text-primary);
+    overflow-x: hidden;
+    line-height: 1.6;
+    min-height: 100vh;
+    cursor: none; /* Hide cursor for TV experience */
+}
+
+.container {
+    max-width: 1920px;
+    margin: 0 auto;
+    padding: var(--safe-area-top) var(--safe-area-right) var(--safe-area-bottom) var(--safe-area-left);
+}
+
+/* ===========================
+   Header - Large & Clear
+   =========================== */
+.header {
+    margin-bottom: 40px;
+    animation: fadeInDown 0.8s ease-out;
+}
+
+.header-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 40px;
+}
+
+.app-title {
+    display: flex;
+    align-items: center;
+    gap: 30px;
+}
+
+.app-title i {
+    font-size: 5rem;
+    background: var(--primary-gradient);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    animation: float 3s ease-in-out infinite;
+}
+
+.app-title h1 {
+    font-size: var(--font-size-huge);
+    font-weight: 900;
+    background: var(--primary-gradient);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    letter-spacing: 2px;
+}
+
+/* ===========================
+   City Selector - TV Optimized
+   =========================== */
+.city-selector-wrapper {
+    position: relative;
+}
+
+.city-selector {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    padding: 25px 40px;
+    font-size: var(--font-size-large);
+    font-weight: 700;
+    background: var(--glass-bg);
+    border: 3px solid rgba(255, 255, 255, 0.1);
+    border-radius: 30px;
+    color: var(--text-primary);
+    cursor: pointer;
+    transition: all 0.3s ease;
+    backdrop-filter: blur(20px);
+    min-width: 350px;
+}
+
+.city-selector i {
+    font-size: 2.5rem;
+}
+
+.city-dropdown {
+    position: absolute;
+    top: calc(100% + 20px);
+    right: 0;
+    background: rgba(10, 14, 39, 0.95);
+    backdrop-filter: blur(30px);
+    border: 3px solid rgba(255, 255, 255, 0.15);
+    border-radius: 30px;
+    padding: 20px;
+    min-width: 450px;
+    max-height: 0;
+    overflow: hidden;
+    opacity: 0;
+    transform: translateY(-20px);
+    transition: all 0.4s ease;
+    z-index: 1000;
+}
+
+.city-dropdown.active {
+    max-height: 800px;
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.city-option {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    padding: 25px 30px;
+    margin: 10px 0;
+    font-size: var(--font-size-large);
+    border-radius: 20px;
+    transition: all 0.3s ease;
+    cursor: pointer;
+}
+
+.city-option i {
+    font-size: 2rem;
+    width: 50px;
+}
+
+/* ===========================
+   Focus Styles - Critical for TV
+   =========================== */
+.focusable {
+    position: relative;
+    outline: none;
+}
+
+.focusable:focus,
+.focusable.focused {
+    border-color: var(--focus-color);
+    box-shadow: var(--focus-glow);
+    transform: scale(1.08);
+    z-index: 10;
+}
+
+.city-option:focus,
+.city-option.focused {
+    background: var(--primary-gradient);
+    transform: scale(1.05) translateX(10px);
+}
+
+/* ===========================
+   Current Weather - Massive Display
+   =========================== */
+.current-weather {
+    background: var(--glass-bg);
+    backdrop-filter: blur(30px);
+    border: 3px solid rgba(255, 255, 255, 0.1);
+    border-radius: 50px;
+    padding: 60px;
+    margin-bottom: 50px;
+    animation: fadeIn 1s ease-out 0.2s backwards;
+}
+
+.weather-main {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 80px;
+    margin-bottom: 30px;
+}
+
+.weather-icon {
+    font-size: 10rem;
+    animation: float 3s ease-in-out infinite;
+}
+
+.weather-icon i {
+    background: var(--secondary-gradient);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    filter: drop-shadow(0 10px 30px rgba(245, 87, 108, 0.4));
+}
+
+.temperature-display {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+}
+
+.current-temp {
+    font-size: var(--font-size-massive);
+    font-weight: 900;
+    line-height: 1;
+    background: linear-gradient(135deg, #f093fb 0%, #f5576c 50%, #ffa726 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    text-shadow: 0 20px 60px rgba(245, 87, 108, 0.4);
+    letter-spacing: -5px;
+}
+
+.weather-details {
+    display: flex;
+    gap: 60px;
+}
+
+.detail-item {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    font-size: var(--font-size-large);
+    color: var(--text-secondary);
+}
+
+.detail-item i {
+    font-size: 2.5rem;
+    color: var(--focus-color);
+}
+
+.last-update {
+    text-align: center;
+    font-size: var(--font-size-base);
+    color: var(--text-tertiary);
+    margin-top: 20px;
+}
+
+/* ===========================
+   Time Range Selector
+   =========================== */
+.time-range-selector {
+    display: flex;
+    gap: 30px;
+    justify-content: center;
+    margin-bottom: 50px;
+    animation: fadeIn 1s ease-out 0.4s backwards;
+}
+
+.range-btn {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    padding: 30px 50px;
+    font-size: var(--font-size-large);
+    font-weight: 700;
+    background: var(--glass-bg);
+    border: 3px solid rgba(255, 255, 255, 0.1);
+    border-radius: 30px;
+    color: var(--text-primary);
+    cursor: pointer;
+    transition: all 0.3s ease;
+    backdrop-filter: blur(20px);
+}
+
+.range-btn i {
+    font-size: 2.5rem;
+}
+
+.range-btn.active {
+    background: var(--primary-gradient);
+    border-color: transparent;
+    box-shadow: 0 10px 40px rgba(102, 126, 234, 0.5);
+}
+
+.range-btn:focus,
+.range-btn.focused {
+    border-color: var(--focus-color);
+    box-shadow: var(--focus-glow);
+    transform: scale(1.08);
+}
+
+/* ===========================
+   Chart Section - Full Screen Feel
+   =========================== */
+.chart-section {
+    background: var(--glass-bg);
+    backdrop-filter: blur(30px);
+    border: 3px solid rgba(255, 255, 255, 0.1);
+    border-radius: 50px;
+    padding: 50px;
+    margin-bottom: 50px;
+    animation: fadeIn 1s ease-out 0.6s backwards;
+}
+
+.chart-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 40px;
+}
+
+.chart-header h2 {
+    font-size: var(--font-size-xlarge);
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.chart-header h2 i {
+    color: var(--focus-color);
+}
+
+.chart-legend {
+    display: flex;
+    gap: 40px;
+    font-size: var(--font-size-base);
+}
+
+.legend-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.legend-color {
+    width: 40px;
+    height: 8px;
+    border-radius: 4px;
+}
+
+.legend-color.past-temp {
+    background: #4fc3f7;
+}
+
+.legend-color.future-temp {
+    background: #ffd54f;
+}
+
+.legend-color.past-rain {
+    background: rgba(63, 81, 181, 0.6);
+}
+
+.legend-color.future-rain {
+    background: rgba(100, 181, 246, 0.4);
+}
+
+.chart-wrapper {
+    position: relative;
+    height: 650px;
+    padding: 20px;
+}
+
+/* ===========================
+   Loading & Error States
+   =========================== */
+.loading-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(10, 14, 39, 0.95);
+    backdrop-filter: blur(20px);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 40px;
+    z-index: 9999;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+}
+
+.loading-overlay.active {
+    opacity: 1;
+    pointer-events: all;
+}
+
+.loading-spinner i {
+    font-size: 8rem;
+    color: var(--focus-color);
+}
+
+.loading-text {
+    font-size: var(--font-size-xlarge);
+    color: var(--text-primary);
+}
+
+.error-message {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: rgba(255, 50, 50, 0.95);
+    backdrop-filter: blur(30px);
+    border: 3px solid rgba(255, 100, 100, 0.5);
+    border-radius: 40px;
+    padding: 60px;
+    z-index: 10000;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+    text-align: center;
+    max-width: 800px;
+}
+
+.error-message.active {
+    opacity: 1;
+    pointer-events: all;
+}
+
+.error-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 30px;
+}
+
+.error-content i {
+    font-size: 6rem;
+}
+
+.error-text {
+    font-size: var(--font-size-large);
+    line-height: 1.8;
+}
+
+.retry-btn {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    padding: 25px 50px;
+    font-size: var(--font-size-large);
+    font-weight: 700;
+    background: rgba(255, 255, 255, 0.2);
+    border: 3px solid rgba(255, 255, 255, 0.4);
+    border-radius: 25px;
+    color: var(--text-primary);
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.retry-btn:focus,
+.retry-btn.focused {
+    border-color: var(--focus-color);
+    box-shadow: var(--focus-glow);
+    transform: scale(1.1);
+}
+
+/* ===========================
+   Remote Control Help
+   =========================== */
+.remote-help {
+    position: fixed;
+    bottom: var(--safe-area-bottom);
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 60px;
+    padding: 25px 50px;
+    background: rgba(10, 14, 39, 0.8);
+    backdrop-filter: blur(20px);
+    border: 2px solid rgba(255, 255, 255, 0.1);
+    border-radius: 30px;
+    font-size: var(--font-size-base);
+    color: var(--text-secondary);
+    opacity: 0;
+    animation: fadeInUp 1s ease-out 1s forwards;
+}
+
+.help-item {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.help-item i {
+    font-size: 2rem;
+    color: var(--focus-color);
+}
+
+/* ===========================
+   Animations
+   =========================== */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes fadeInDown {
+    from {
+        opacity: 0;
+        transform: translateY(-30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateX(-50%) translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(-50%) translateY(0);
+    }
+}
+
+@keyframes float {
+    0%, 100% {
+        transform: translateY(0);
+    }
+    50% {
+        transform: translateY(-15px);
+    }
+}
+
+/* ===========================
+   Responsive Adjustments
+   =========================== */
+@media (max-width: 1600px) {
+    :root {
+        --font-size-massive: 10rem;
+        --font-size-huge: 3.5rem;
+        --font-size-xlarge: 2.5rem;
+        --font-size-large: 2rem;
+        --font-size-medium: 1.6rem;
+        --font-size-base: 1.3rem;
+    }
+    
+    .chart-wrapper {
+        height: 550px;
+    }
+}
+
+@media (max-width: 1280px) {
+    :root {
+        --font-size-massive: 8rem;
+        --font-size-huge: 3rem;
+        --font-size-xlarge: 2.2rem;
+        --font-size-large: 1.8rem;
+        --font-size-medium: 1.4rem;
+        --font-size-base: 1.2rem;
+        --safe-area-left: 60px;
+        --safe-area-right: 60px;
+    }
+    
+    .chart-wrapper {
+        height: 450px;
+    }
+}

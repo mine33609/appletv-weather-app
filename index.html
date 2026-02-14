@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>気温予測 - Apple TV対応</title>
+    
+    <!-- Favicon -->
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🌡️</text></svg>">
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700;900&display=swap" rel="stylesheet">
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns@3.0.0/dist/chartjs-adapter-date-fns.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-annotation@3.0.1/dist/chartjs-plugin-annotation.min.js"></script>
+    
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <!-- Main Container -->
+    <div class="container">
+        <!-- Header -->
+        <header class="header">
+            <div class="header-content">
+                <div class="app-title">
+                    <i class="fas fa-cloud-sun"></i>
+                    <h1>気温予測</h1>
+                </div>
+                
+                <!-- City Selector -->
+                <div class="city-selector-wrapper">
+                    <button class="city-selector focusable" id="citySelector" tabindex="1">
+                        <i class="fas fa-map-marker-alt"></i>
+                        <span id="selectedCity">東京</span>
+                        <i class="fas fa-chevron-down"></i>
+                    </button>
+                    
+                    <!-- City Dropdown -->
+                    <div class="city-dropdown" id="cityDropdown">
+                        <div class="city-option focusable" data-city="tokyo" data-lat="35.6762" data-lon="139.6503" tabindex="2">
+                            <i class="fas fa-building"></i>東京
+                        </div>
+                        <div class="city-option focusable" data-city="osaka" data-lat="34.6937" data-lon="135.5023" tabindex="3">
+                            <i class="fas fa-city"></i>大阪
+                        </div>
+                        <div class="city-option focusable" data-city="nagoya" data-lat="35.1815" data-lon="136.9066" tabindex="4">
+                            <i class="fas fa-torii-gate"></i>名古屋
+                        </div>
+                        <div class="city-option focusable" data-city="sapporo" data-lat="43.0642" data-lon="141.3469" tabindex="5">
+                            <i class="fas fa-snowflake"></i>札幌
+                        </div>
+                        <div class="city-option focusable" data-city="fukuoka" data-lat="33.5904" data-lon="130.4017" tabindex="6">
+                            <i class="fas fa-mountain"></i>福岡
+                        </div>
+                        <div class="city-option focusable" data-city="sendai" data-lat="38.2682" data-lon="140.8694" tabindex="7">
+                            <i class="fas fa-tree"></i>仙台
+                        </div>
+                        <div class="city-option focusable" data-city="hiroshima" data-lat="34.3853" data-lon="132.4553" tabindex="8">
+                            <i class="fas fa-peace"></i>広島
+                        </div>
+                        <div class="city-option focusable" data-city="kyoto" data-lat="35.0116" data-lon="135.7681" tabindex="9">
+                            <i class="fas fa-temple"></i>京都
+                        </div>
+                        <div class="city-option focusable" data-city="naha" data-lat="26.2124" data-lon="127.6809" tabindex="10">
+                            <i class="fas fa-umbrella-beach"></i>那覇
+                        </div>
+                        <div class="city-option focusable" data-city="okayama" data-lat="34.6551" data-lon="133.9195" tabindex="11">
+                            <i class="fas fa-landmark"></i>岡山
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </header>
+        
+        <!-- Current Weather Section -->
+        <section class="current-weather">
+            <div class="weather-main">
+                <div class="weather-icon" id="weatherIcon">
+                    <i class="fas fa-sun"></i>
+                </div>
+                <div class="temperature-display">
+                    <div class="current-temp" id="currentTemp">--</div>
+                    <div class="weather-details">
+                        <div class="detail-item">
+                            <i class="fas fa-tint"></i>
+                            <span id="humidity">--%</span>
+                        </div>
+                        <div class="detail-item">
+                            <i class="fas fa-wind"></i>
+                            <span id="windSpeed">-- m/s</span>
+                        </div>
+                        <div class="detail-item">
+                            <i class="fas fa-cloud-rain"></i>
+                            <span id="precipitation">-- mm</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="last-update" id="lastUpdate">更新中...</div>
+        </section>
+        
+        <!-- Time Range Selector -->
+        <div class="time-range-selector">
+            <button class="range-btn focusable active" id="range24h" data-range="24" tabindex="12">
+                <i class="fas fa-clock"></i>
+                24時間予測
+            </button>
+            <button class="range-btn focusable" id="range48h" data-range="48" tabindex="13">
+                <i class="fas fa-calendar-day"></i>
+                48時間予測
+            </button>
+        </div>
+        
+        <!-- Main Chart -->
+        <section class="chart-section">
+            <div class="chart-header">
+                <h2><i class="fas fa-chart-line"></i> 気温と降水量の推移</h2>
+                <div class="chart-legend">
+                    <span class="legend-item"><span class="legend-color past-temp"></span>過去の気温</span>
+                    <span class="legend-item"><span class="legend-color future-temp"></span>未来の気温</span>
+                    <span class="legend-item"><span class="legend-color past-rain"></span>過去の降水量</span>
+                    <span class="legend-item"><span class="legend-color future-rain"></span>未来の降水量</span>
+                </div>
+            </div>
+            <div class="chart-wrapper">
+                <canvas id="mainChart"></canvas>
+            </div>
+        </section>
+        
+        <!-- Loading Overlay -->
+        <div class="loading-overlay" id="loadingOverlay">
+            <div class="loading-spinner">
+                <i class="fas fa-spinner fa-spin"></i>
+            </div>
+            <div class="loading-text">データを読み込み中...</div>
+        </div>
+        
+        <!-- Error Message -->
+        <div class="error-message" id="errorMessage">
+            <div class="error-content">
+                <i class="fas fa-exclamation-triangle"></i>
+                <div class="error-text" id="errorText"></div>
+                <button class="retry-btn focusable" id="retryBtn" tabindex="14">
+                    <i class="fas fa-redo"></i>
+                    再試行
+                </button>
+            </div>
+        </div>
+        
+        <!-- Focus Ring Helper -->
+        <div class="focus-ring" id="focusRing"></div>
+    </div>
+    
+    <!-- Remote Control Help -->
+    <div class="remote-help" id="remoteHelp">
+        <div class="help-item">
+            <i class="fas fa-arrows-alt"></i>
+            <span>十字キー: 移動</span>
+        </div>
+        <div class="help-item">
+            <i class="fas fa-hand-pointer"></i>
+            <span>タッチパッド/Enter: 選択</span>
+        </div>
+        <div class="help-item">
+            <i class="fas fa-info-circle"></i>
+            <span>Menu: ヘルプ表示</span>
+        </div>
+    </div>
+    
+    <!-- JavaScript -->
+    <script src="js/main.js"></script>
+</body>
+</html>
